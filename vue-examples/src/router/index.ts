@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import SignUpView from '../views/SignUpView.vue';
+import ShopView from '../views/Shop/ShopView.vue';
+import ProductsPage from '../views/Shop/pages/ProductsPage.vue';
+import CartPage from '../views/Shop/pages/CartPage.vue';
 import NotFoundView from '../views/NotFoundView.vue';
 
 const router = createRouter({
@@ -19,7 +22,19 @@ const router = createRouter({
     {
       path: '/shop',
       name: 'shop',
-      component: NotFoundView,
+      component: ShopView,
+      children: [
+        {
+          path: 'cart',
+          name: 'cart',
+          component: CartPage,
+        },
+        {
+          path: 'products',
+          name: 'products',
+          component: ProductsPage,
+        },
+      ],
     },
     {
       path: '/image-search',

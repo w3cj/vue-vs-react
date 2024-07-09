@@ -35,7 +35,7 @@ function SignUp() {
     console.log(data);
   };
 
-  const onBlur = (property: FormFields) => {
+  const onBlur = (property: FormFields) => () => {
     const message = getFieldError(property, formState[property]);
     setFormErrors((prev) => ({ ...prev, [property]: message }));
     setTouchedFields((prev) => ({ ...prev, [property]: true }));
@@ -48,12 +48,17 @@ function SignUp() {
     return undefined; // Do not add aria-invalid attribute if not touched
   };
 
-  const setField = <T extends FormFields, K extends FormSchema[T]>(
-    property: T,
-    value: K
-  ) => {
-    setFormState((prev) => ({ ...prev, [property]: value }));
-  };
+  const setField =
+    <T extends FormFields>(
+      property: T,
+      valueSelector?: (e: React.ChangeEvent<HTMLInputElement>) => FormSchema[T]
+    ) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormState((prev) => ({
+        ...prev,
+        [property]: valueSelector ? valueSelector(e) : e.target.value,
+      }));
+    };
 
   return (
     <form onSubmit={onSubmit} noValidate>
@@ -63,8 +68,8 @@ function SignUp() {
         id="email"
         name="email"
         value={formState.email}
-        onChange={(e) => setField('email', e.target.value)}
-        onBlur={() => onBlur('email')}
+        onChange={setField('email')}
+        onBlur={onBlur('email')}
         aria-invalid={isInvalid('email')}
         required
       />
@@ -76,8 +81,8 @@ function SignUp() {
         id="firstName"
         name="firstName"
         value={formState.firstName}
-        onChange={(e) => setField('firstName', e.target.value)}
-        onBlur={() => onBlur('firstName')}
+        onChange={setField('firstName')}
+        onBlur={onBlur('firstName')}
         aria-invalid={isInvalid('firstName')}
         required
       />
@@ -89,8 +94,8 @@ function SignUp() {
         id="lastName"
         name="lastName"
         value={formState.lastName}
-        onChange={(e) => setField('lastName', e.target.value)}
-        onBlur={() => onBlur('lastName')}
+        onChange={setField('lastName')}
+        onBlur={onBlur('lastName')}
         aria-invalid={isInvalid('lastName')}
         required
       />
@@ -102,8 +107,8 @@ function SignUp() {
         id="username"
         name="username"
         value={formState.username}
-        onChange={(e) => setField('username', e.target.value)}
-        onBlur={() => onBlur('username')}
+        onChange={setField('username')}
+        onBlur={onBlur('username')}
         aria-invalid={isInvalid('username')}
         required
       />
@@ -115,8 +120,8 @@ function SignUp() {
         id="password"
         name="password"
         value={formState.password}
-        onChange={(e) => setField('password', e.target.value)}
-        onBlur={() => onBlur('password')}
+        onChange={setField('password')}
+        onBlur={onBlur('password')}
         aria-invalid={isInvalid('password')}
         required
       />
@@ -128,7 +133,7 @@ function SignUp() {
         id="confirmPassword"
         name="confirmPassword"
         value={formState.confirmPassword}
-        onChange={(e) => setField('confirmPassword', e.target.value)}
+        onChange={setField('confirmPassword')}
         onBlur={() => onBlur('confirmPassword')}
         aria-invalid={isInvalid('confirmPassword')}
         required
@@ -142,9 +147,7 @@ function SignUp() {
           type="checkbox"
           id="newsletter"
           name="newsletter"
-          onChange={(e) => {
-            setField('newsletter', e.target.checked);
-          }}
+          onChange={setField('newsletter', (e) => e.target.checked)}
           checked={formState.newsletter}
         />
         Subscribe to newsletter

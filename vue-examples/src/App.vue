@@ -4,7 +4,8 @@ import { RouterLink, RouterView, useRoute } from 'vue-router';
 const route = useRoute();
 
 const isActive = (path: string) => {
-  return route.path === path || undefined;
+  if (path === '/') return route.path === path || undefined;
+  return route.path.startsWith(path);
 };
 </script>
 
@@ -39,7 +40,7 @@ const isActive = (path: string) => {
           <RouterLink
             :class="{ secondary: isActive('/shop') }"
             :aria-current="isActive('/shop')"
-            to="/shop"
+            to="/shop/products"
           >
             Shop
           </RouterLink>
@@ -70,3 +71,31 @@ const isActive = (path: string) => {
     <RouterView />
   </main>
 </template>
+
+<style>
+.vue-flash {
+  position: relative;
+}
+.vue-flash::before {
+  animation: 1s vue-flash linear forwards;
+  box-sizing: border-box;
+
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes vue-flash {
+  0% {
+    border: 3px solid rgb(55, 175, 169, 1);
+  }
+  100% {
+    border: 3px solid rgba(55, 175, 169, 0);
+  }
+}
+</style>

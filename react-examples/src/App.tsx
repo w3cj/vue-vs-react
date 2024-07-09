@@ -1,25 +1,15 @@
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-  Link,
-  useLocation,
-} from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import SignUp from './pages/SignUp';
+import Shop from './pages/Shop';
+// import Shop from './pages/Shop/index-reducer';
+// import Shop from './pages/Shop-context-selector';
+// import Shop from './pages/Shop-zustand';
+import useLinkHelpers from './hooks/useLinkHelpers';
 
 export function App() {
-  const location = useLocation();
-
-  const isActive = (path: string) => {
-    return location.pathname === path || undefined;
-  };
-
-  const getClassName = (path: string) => {
-    return isActive(path) ? 'secondary' : '';
-  };
-
+  const { isActive, getClassName } = useLinkHelpers();
   return (
     <>
       <header className="container">
@@ -52,7 +42,7 @@ export function App() {
               <Link
                 className={getClassName('/shop')}
                 aria-current={isActive('/shop')}
-                to="/shop"
+                to="/shop/products"
               >
                 Shop
               </Link>
@@ -83,7 +73,7 @@ export function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/shop" element={<NotFound />} />
+          <Route path="/shop/*" element={<Shop />} />
           <Route path="/image-search" element={<NotFound />} />
           <Route path="/stocks" element={<NotFound />} />
           <Route path="*" element={<NotFound />} />
