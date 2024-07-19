@@ -1,3 +1,20 @@
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+main {
+  flex-grow: 1;
+}
+
 img {
   width: 100%;
 }
@@ -94,4 +111,78 @@ img {
 
 .stocks {
   overflow-x: hidden;
+}
+
+.error {
+  background: red;
+  color: white;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.full {
+  width: 100%;
+  height: 98%;
+}
+
+.active-drag-outline {
+  outline: 2px solid red;
+}
+
+.image-upload-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.image-wrapper {
+  height: 250px;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.image-wrapper img {
+  height: 100%;
+  object-fit: cover;
+  background-image: url(./alpha.png);
+}
+
+.image-wrapper:hover {
+  z-index: 100;
+  overflow: visible;
+  outline: 2px solid white;
+}
+
+.image-wrapper:hover img {
+  transform: scale(1.5);
+  object-fit: contain;
+}
+
+.image-wrapper progress {
+  z-index: 2;
+}
+
+.image-wrapper p {
+  word-break: break-all;
+}
+
+.image-upload-overlay {
+  background: grey;
+  opacity: 0.5;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }

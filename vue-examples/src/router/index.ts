@@ -4,6 +4,8 @@ import SignUpView from '../views/SignUpView.vue';
 import ShopView from '../views/Shop/ShopView.vue';
 import ProductsPage from '../views/Shop/pages/ProductsPage.vue';
 import CartPage from '../views/Shop/pages/CartPage.vue';
+import ImageSearchPage from '../views/ImageSearch/ImageSearchView.simple.vue';
+import AdvancedImageSearchPage from '../views/ImageSearch/ImageSearchView.vue';
 import NotFoundView from '../views/NotFoundView.vue';
 
 const router = createRouter({
@@ -39,7 +41,12 @@ const router = createRouter({
     {
       path: '/image-search',
       name: 'image-search',
-      component: NotFoundView,
+      component: ImageSearchPage,
+    },
+    {
+      path: '/advanced-image-search',
+      name: 'advanced-image-search',
+      component: AdvancedImageSearchPage,
     },
     {
       path: '/stocks',

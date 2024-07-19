@@ -56,6 +56,15 @@ const isActive = (path: string) => {
         </li>
         <li>
           <RouterLink
+            :class="{ secondary: isActive('/advanced-image-search') }"
+            :aria-current="isActive('/advanced-image-search')"
+            to="/advanced-image-search"
+          >
+            Advanced Image Search
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink
             :class="{ secondary: isActive('/stocks') }"
             :aria-current="isActive('/stocks')"
             to="/stocks"

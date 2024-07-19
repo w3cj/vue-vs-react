@@ -34,5 +34,6 @@ module.exports = {
     'import/prefer-default-export': 0,
     'no-promise-executor-return': 0,
     'no-nested-ternary': 0,
+    'react/require-default-props': 0,
   },
 };
