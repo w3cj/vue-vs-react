@@ -10,7 +10,7 @@ const isActive = (path: string) => {
 </script>
 
 <template>
-  <header className="container">
+  <header class="container">
     <nav>
       <ul>
         <li>

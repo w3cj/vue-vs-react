@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import TickerMarquee from './components/TickerMarquee.vue';
-import TickerForm from './components/TickerForm.vue';
+import SymbolMarquee from './components/SymbolMarquee.vue';
+import SymbolForm from './components/SymbolForm.vue';
 import StockLineChart from './components/StockLineChart.vue';
-import YahooFinance, { type Stock } from './YahooFinance';
-import type { StockDirection, Direction } from './types';
-import { getDirection, colors } from './utils';
+import YahooFinance from './YahooFinance';
+import { colors } from './utils';
 
-const tickers = ref<string[]>([]);
-const latest = ref<Map<string, StockDirection>>(new Map());
+const symbols = ref<string[]>([]);
 
 onMounted(() => {
   YahooFinance.init();
@@ -18,43 +16,31 @@ onUnmounted(() => {
   YahooFinance.close();
 });
 
-const onUpdate = (update: Stock) => {
-  let direction: Direction = 'none';
-  const info = latest.value.get(update.id);
-  if (info) {
-    direction = getDirection(update.price - info.stock.price);
-  }
-  latest.value.set(update.id, { direction, stock: update });
+const addSymbol = (symbol: string) => {
+  symbols.value.push(symbol);
 };
 
-const addTicker = (ticker: string) => {
-  tickers.value.push(ticker);
-  YahooFinance.subscribe([ticker], onUpdate);
-};
-
-const removeTicker = (ticker: string) => {
-  latest.value.delete(ticker);
-  tickers.value = tickers.value.filter((i) => i !== ticker);
-  YahooFinance.unsubscribe([ticker], onUpdate);
+const removeSymbol = (symbol: string) => {
+  symbols.value = symbols.value.filter((i) => i !== symbol);
 };
 </script>
 
 <template>
   <div class="stocks">
-    <TickerMarquee :tickers="tickers" :latest="latest" />
-    <TickerForm :tickers="tickers" @add="addTicker" />
+    <SymbolMarquee :symbols="symbols" />
+    <SymbolForm :symbols="symbols" @add="addSymbol" />
     <div class="charts">
-      <template v-if="tickers.length">
+      <template v-if="symbols.length">
         <StockLineChart
-          v-for="(ticker, index) in tickers"
-          :key="ticker"
+          v-for="(symbol, index) in symbols"
+          :key="symbol"
           :color="colors[index % colors.length]"
-          :ticker="ticker"
-          @remove="removeTicker"
+          :symbol="symbol"
+          @remove="removeSymbol"
         />
       </template>
       <article v-else class="chart-container">
-        <p>Add a ticker to start watching.</p>
+        <p>Add a symbol to start watching.</p>
       </article>
     </div>
   </div>

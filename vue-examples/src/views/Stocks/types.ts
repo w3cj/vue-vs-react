@@ -13,8 +13,3 @@ export type StockInfo = {
 };
 
 export type Direction = 'up' | 'down' | 'none';
-
-export type StockDirection = {
-  stock: Stock;
-  direction: Direction;
-};

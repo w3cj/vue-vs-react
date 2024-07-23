@@ -29,7 +29,7 @@ img {
   justify-content: space-between;
 }
 
-.ticker {
+.symbols {
   width: 100%;
   display: flex;
   gap: 1rem;

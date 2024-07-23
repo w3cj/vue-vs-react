@@ -42,13 +42,6 @@ export default function useImages(searchTerm: string, page: number) {
     };
   }, [fetchImages]);
 
-  const count = useRef(0);
-
-  useEffect(() => {
-    count.current += 1;
-    console.log('Count:', count.current);
-  }, []);
-
   return {
     fetchImages,
     error,

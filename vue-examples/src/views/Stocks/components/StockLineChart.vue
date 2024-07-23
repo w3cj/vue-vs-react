@@ -4,12 +4,12 @@ import { Line } from 'vue-chartjs';
 import type { Direction, LineChartDataset, StockInfo } from '../types';
 import YahooFinance, { type Stock } from '../YahooFinance';
 import { getDirection, lineChartOptions } from '../utils';
-import Ticker from './Ticker.vue';
+import Symbol from './Symbol.vue';
 
-const props = defineProps<{
+const { color, symbol, onRemove } = defineProps<{
   color: string;
-  ticker: string;
-  onRemove: (ticker: string) => void;
+  symbol: string;
+  onRemove: (symbol: string) => void;
 }>();
 
 const direction = ref<Direction>('none');
@@ -20,42 +20,42 @@ const data = ref<{ labels: string[]; datasets: LineChartDataset[] }>({
   datasets: [],
 });
 
+const createChartData = (stock: Stock, label: string) => ({
+  id: stock.id,
+  latest: stock,
+  options: {
+    labels: [label],
+    dataset: {
+      label: stock.id,
+      borderWidth: 1,
+      pointStyle: 'triangle',
+      backgroundColor: color,
+      borderColor: color,
+      data: markRaw([
+        {
+          x: stock.time,
+          y: stock.price,
+        },
+      ]),
+    },
+  },
+});
+
 const onUpdate = (update: Stock) => {
   const newLabel = new Date(update.time).toLocaleTimeString();
   if (info.value) {
-    if (!info.value.options.labels.find((label) => label === newLabel)) {
-      direction.value = getDirection(update.price - info.value.latest.price);
-      info.value.latest = update;
-      info.value.options.labels.push(newLabel);
-      info.value.options.dataset.data.push({
-        x: update.time,
-        y: update.price,
-      });
-    }
+    if (!info.value.options.labels.find((label) => label === newLabel)) return;
+    direction.value = getDirection(update.price - info.value.latest.price);
+    info.value.latest = update;
+    info.value.options.labels.push(newLabel);
+    info.value.options.dataset.data.push({
+      x: update.time,
+      y: update.price,
+    });
   } else {
-    info.value = {
-      id: update.id,
-      latest: update,
-      options: {
-        labels: [newLabel],
-        dataset: {
-          label: update.id,
-          borderWidth: 1,
-          pointStyle: 'triangle',
-          backgroundColor: props.color,
-          borderColor: props.color,
-          data: markRaw([
-            {
-              x: update.time,
-              y: update.price,
-            },
-          ]),
-        },
-      },
-    };
+    info.value = createChartData(update, newLabel);
   }
 
-  // manually overwrite, computed not working...
   data.value = {
     labels: info.value.options.labels,
     datasets: [info.value.options.dataset],
@@ -63,17 +63,17 @@ const onUpdate = (update: Stock) => {
 };
 
 onMounted(async () => {
-  YahooFinance.subscribe([props.ticker], onUpdate);
+  YahooFinance.subscribe([symbol], onUpdate);
 });
 
 onUnmounted(() => {
-  YahooFinance.unsubscribe([props.ticker], onUpdate);
+  YahooFinance.unsubscribe([symbol], onUpdate);
 });
 </script>
 
 <template>
-  <article v-if="!info" :key="ticker" class="chart-container">
-    <h3>{{ ticker }} | Loading...</h3>
+  <article v-if="!info" :key="symbol" class="chart-container">
+    <h3>{{ symbol }} | Loading...</h3>
     <progress></progress>
   </article>
   <article
@@ -83,11 +83,7 @@ onUnmounted(() => {
     :key="info.id"
   >
     <div class="between">
-      <Ticker
-        :key="ticker"
-        :ticker="ticker"
-        :latest="{ direction, stock: info.latest }"
-      />
+      <Symbol :key="symbol" :symbol="symbol" />
       <button type="button" @click="() => onRemove(info!.id)">Remove</button>
     </div>
     <Line :options="lineChartOptions" :data="data" />

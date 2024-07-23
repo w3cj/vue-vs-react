@@ -9,7 +9,7 @@ import Shop from './pages/Shop';
 import useLinkHelpers from './hooks/useLinkHelpers';
 import AdvancedImageSearch from './pages/ImageSearch/index';
 import ImageSearch from './pages/ImageSearch/index.simple';
-import ImageUpload from './pages/ImageUpload';
+import Stocks from './pages/Stocks';
 
 export function App() {
   const { isActive, getClassName } = useLinkHelpers();
@@ -68,15 +68,6 @@ export function App() {
                 Advanced Image Search
               </Link>
             </li>
-            {/* <li>
-              <Link
-                className={getClassName('/image-upload')}
-                aria-current={isActive('/image-upload')}
-                to="/image-upload"
-              >
-                Image Upload
-              </Link>
-            </li> */}
             <li>
               <Link
                 className={getClassName('/stocks')}
@@ -100,8 +91,7 @@ export function App() {
             path="/advanced-image-search"
             element={<AdvancedImageSearch />}
           />
-          {/* <Route path="/image-upload" element={<ImageUpload />} /> */}
-          <Route path="/stocks" element={<NotFound />} />
+          <Route path="/stocks" element={<Stocks />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
